@@ -3,6 +3,23 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "dev": "nodemon",
+    "build:clean": "npm run clear:packages && npm run build",
+    "clear:packages": "rimraf package-lock.json && rimraf dist && rimraf tsconfig.tsbuildinfo && rimraf node_modules &&npm install",
+    "build": "NODE_ENV=production tsc -p tsconfig.json && tsc-alias -p tsconfig.json && npm run copy:swagger",
+    "start": "node dist/server.js",
+    "start:debug": "node --inspect dist/server.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "copy:swagger": "copyfiles -u 2 \"src/docs/**/*\" dist/docs",
+    "test": "NODE_ENV=test jest --passWithNoTests --silent --noStackTrace --runInBand",
+    "test:verbose": "NODE_ENV=test jest --passWithNoTests --runInBand",
+    "test:clear": "npx jest --clearCache",
+    "test:unit": "npm test -- --watch -c jest-unit-config.ts",
+    "test:integration": "npm test -- --watch -c jest-integration-config.js",
+    "test:staged": "npm test -- --findRelatedTests",
+    "test:ci": "npm test -- --coverage"
+  },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/dotenv": "^8.2.3",
@@ -40,5 +57,8 @@
     "yaml": "^2.8.1",
     "yamljs": "^0.3.0",
     "zod": "^4.1.12"
+  },
+  "_moduleAliases": {
+    "@": "dist"
   }
 }
